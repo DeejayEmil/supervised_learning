@@ -1,0 +1,117 @@
+---
+title: "Decision Tree"
+author: "Emil Gil"
+date: "2023-12-19"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+# Student : Emil Alfonso Gil
+## Decision Trees, Bank Marketing dataset and Titanic
+
+```{r}
+library(rpart)
+ 
+library(rpart.plot)
+
+library(rattle)
+
+library(titanic)
+data("titanic_train")
+head(titanic_train)
+```
+
+```{r}
+arbol <- rpart(
+  formula = Survived ~ Sex + Age,
+  data = titanic_train,
+  method = 'class'
+)
+fancyRpartPlot(arbol, main = "Titanic dataset", sub = "Did the passenger survived o not?")
+```
+
+Bank Marketing Dataset: This is the classic marketing bank dataset uploaded originally in the UCI Machine Learning Repository. The dataset gives you information about a marketing campaign of a financial institution in which you will have to analyze in order to find ways to look for future strategies in order to improve future marketing campaigns for the bank.
+
+```{r}
+bank <- read.csv("bank.csv")
+str(bank)
+```
+
+
+```{r}
+arbol <- rpart(
+  formula = deposit ~ marital + loan + balance,
+  data = bank,
+  method = 'class'
+)
+
+rpart.plot(arbol,
+           box.palette = "RdGn",
+           main = "User was suscribed or not to the product",
+           sub = "After the product campaign",
+           branch.col = "darkgray",
+           branch.lty = 5,
+           branch.lwd = 3,
+           cex = .85,
+           shadow.col = "gray",
+           cex.main = 2,
+           col.main = "darkblue",
+           col.sub = "blue")
+```
+
+## Analisis del arbol de decision / Decision tree analysis
+
+Este arbol de decision busca clasificar en base a la variable Deposit, esta representa si el cliente se ha suscrito o no al producto o servicio después de una campaña de marketing. 
+
+Se utilizan varios parametros para determinar esto como lo son: edad, trabajo, educacion, estado civil, tipo de telefono, duracion de la llamada, etc.
+
+Sin embargo se estan utilizando los parametros de Marital, Loan y Balance para representar el arbol de desicion.
+
+Marital (Estado Civil): Esta variable indica el estado civil de los clientes. Puede tener categorías como "soltero", "casado" o "divorciado". El estado civil puede influir en las decisiones financieras y en la receptividad a productos o servicios ofrecidos en la campaña.
+
+Loan (Prestamo): Esta variable es binaria y generalmente representa si un cliente tiene un préstamo personal o no. Puede tener dos valores: "yes" (sí) o "no" (no). La presencia de un préstamo puede ser un factor importante al evaluar la capacidad de un cliente para suscribirse a nuevos productos o servicios.
+
+Balance (Saldo): Esta variable generalmente se refiere al saldo de la cuenta bancaria del cliente. Indica cuánto dinero tiene el cliente en su cuenta en un momento dado. El saldo bancario puede ser un indicador crucial de la capacidad financiera de un cliente y, por lo tanto, puede influir en su disposición para participar en la campaña.
+
+--------------------------------------------------------------------------------
+
+This decision tree aims to classify based on the "Deposit" variable, which represents whether the customer has subscribed or not to the product or service after a marketing campaign.
+
+Several parameters are used to determine this, such as age, occupation, education, marital status, type of phone, call duration, etc.
+
+However, the "Marital," "Loan," and "Balance" parameters are being used to represent the decision tree.
+
+Marital: This variable indicates the marital status of the customers. It can have categories such as "single," "married," or "divorced." Marital status can influence financial decisions and receptiveness to products or services offered in the campaign.
+
+Loan: This variable is binary and generally represents whether a customer has a personal loan or not. It can have two values: "yes" or "no." The presence of a loan can be an important factor when evaluating a customer's ability to subscribe to new products or services.
+
+Balance: This variable generally refers to the balance of the customer's bank account. It indicates how much money the customer has in their account at a given time. The bank balance can be a crucial indicator of a customer's financial capacity and, therefore, can influence their willingness to participate in the campaign.
+
+## Analisis / Analysis
+
+En un principio se nos muestra que todas las personas con un balance menor a 224, no se suscribieron al producto, en cambio, los que tenian un balanace mayor a ese monto si lo hicieron. 
+
+De esos que tenian balance mayor a 224, lo que habian tomado prestamo (7%) no se suscribieron, en cambio los que no (64%), si se suscribieron.
+
+De esos que no tenian prestamo, un 26% no estaba casado se suscribieron, en cambio, un 34% si estaba casado y de esos casados los que tenian un balance menor a 969 (14%) no se suscribieron, en cambio el 20% restante que si tenia el balance mayor a 969, si se suscribio.
+
+En conclusion podemos observar que el mayor porcentaje de las personas que se suscribieron tienen las caracteristicas de un balance mayor a 224, no tienen prestamos y no estan casados, es decir, estan solteros o divorciados.
+
+Por otro lado el mayor porcentaje de los que no se suscribieron simplemente no estaban en buena situacion economica, es decir, tenian un balance menor a 224. Lo mismo se puede observar con el 7% que tenia el balance mayor a 224 pero era por prestamo, por lo que tampoco se suscribieron.
+
+--------------------------------------------------------------------------------
+
+Initially, it is shown that all individuals with a balance less than 224 did not subscribe to the product; on the contrary, those with a balance greater than that amount did subscribe.
+
+Among those with a balance greater than 224, those who had taken a loan (7%) did not subscribe, whereas those who had not (64%) did subscribe.
+
+Among those without a loan, 26% who were not married subscribed, whereas 34% who were married subscribed. Among the married individuals, those with a balance less than 969 (14%) did not subscribe, while the remaining 20%, with a balance greater than 969, did subscribe.
+
+In conclusion, we can observe that the highest percentage of subscribers has the characteristic of a balance greater than 224, no loans, and being unmarried or divorced. On the other hand, the highest percentage of non-subscribers simply did not have a good financial situation, meaning they had a balance less than 224. The same can be observed with the 7% who had a balance greater than 224 but it was due to a loan, so they also did not subscribe.
